@@ -1,38 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>QR File Upload</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-
+<html>
 <body>
 
 <h2>Upload File</h2>
 
 <input type="file" id="file">
-<br><br>
 <button onclick="upload()">Submit</button>
 
 <p id="status"></p>
 
 <script>
 function upload() {
-  var file = document.getElementById("file").files[0];
+  const file = document.getElementById("file").files[0];
   if (!file) {
-    alert("File select karo");
+    alert("File select kar");
     return;
   }
 
-  var reader = new FileReader();
+  const reader = new FileReader();
   reader.onload = function () {
-    var base64 = reader.result.split(",")[1];
 
-    fetch("https://script.google.com/macros/s/AKfycbxGHlInDt-p4B6aimsVbr7v-BX2tDVvJzsGbo6APqDBDIzmOY3oOvoj5Ge38E2NaIbnJA/exec", {
+    const base64 = reader.result.split(",")[1];
+
+    fetch(https://script.google.com/macros/s/AKfycbzSuXaRlI1ZZB8x228Aa8ebX_bmO3df7iTropOXTzcq-RGANIisiXZXQap-LYhDD30s/exec, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         filename: file.name,
         mimeType: file.type,
@@ -40,12 +32,8 @@ function upload() {
       })
     })
     .then(res => res.text())
-    .then(txt => {
-      document.getElementById("status").innerText = txt;
-    })
-    .catch(err => {
-      alert("Upload failed");
-    });
+    .then(txt => document.getElementById("status").innerText = txt)
+    .catch(() => alert("Upload failed"));
   };
 
   reader.readAsDataURL(file);
