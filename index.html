@@ -1,3 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR File Upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<h2>Upload File</h2>
+
+<input type="file" id="file">
+<br><br>
+<button onclick="upload()">Submit</button>
+
+<p id="status"></p>
+
 <script>
 function upload() {
   var file = document.getElementById("file").files[0];
@@ -7,9 +25,8 @@ function upload() {
   }
 
   var reader = new FileReader();
-  reader.onload = function() {
-
-    var base64Data = reader.result.split(",")[1]; // IMPORTANT
+  reader.onload = function () {
+    var base64 = reader.result.split(",")[1];
 
     fetch("https://script.google.com/macros/s/AKfycbwtAZ0NlgpyJf5343Md30GQi_r34IWqZTfa3GTGl7yPI8rLR_jm8BJOIj107Vcc8-E2sQ/exec", {
       method: "POST",
@@ -19,14 +36,21 @@ function upload() {
       body: JSON.stringify({
         filename: file.name,
         mimeType: file.type,
-        data: base64Data
+        data: base64
       })
     })
     .then(res => res.text())
-    .then(txt => document.getElementById("status").innerText = txt)
-    .catch(err => alert("Upload failed"));
+    .then(txt => {
+      document.getElementById("status").innerText = txt;
+    })
+    .catch(err => {
+      alert("Upload failed");
+    });
   };
 
   reader.readAsDataURL(file);
 }
 </script>
+
+</body>
+</html>
