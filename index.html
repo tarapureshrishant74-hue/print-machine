@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>File Upload</title>
+</head>
 <body>
 
-<h3>Upload Document</h3>
+<h2>Upload File</h2>
 
-<form action="https://formspree.io/f/xgoybovv"
-      method="POST"
-      enctype="multipart/form-data">
+<input type="file" id="file" />
+<br><br>
+<button onclick="upload()">Submit</button>
 
-  <input type="file" name="file" required>
-  <br><br>
-  <button type="submit">Submit</button>
+<p id="status"></p>
 
-</form>
+<script>
+function upload() {
+  var file = document.getElementById("file").files[0];
+  if (!file) {
+    alert("File select karo");
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var data = {
+      file: e.target.result,
+      name: file.name,
+      type: file.type
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbwtAZ0NlgpyJf5343Md30GQi_r34IWqZTfa3GTGl7yPI8rLR_jm8BJOIj107Vcc8-E2sQ/exec", {
+      method: "POST",
+      body: new URLSearchParams(data)
+    })
+    .then(res => res.text())
+    .then(txt => document.getElementById("status").innerText = txt)
+    .catch(err => alert("Upload failed"));
+  };
+  reader.readAsDataURL(file);
+}
+</script>
 
 </body>
 </html>
